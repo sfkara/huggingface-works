@@ -31,7 +31,7 @@ batch = tokenizer(X_train,padding=True, truncation=True, max_length=512,return_t
 print(batch)
 
 with torch.no_grad():
-    outputs = model(**batch)
+    outputs = model(**batch, labels = torch.tensor([1,0]))
     print(outputs)
     predictions = F.softmax(outputs.logits,dim=1)
     print(predictions)
