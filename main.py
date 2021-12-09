@@ -41,11 +41,29 @@ with torch.no_grad():
     print(labels)
     
     
-save_directory = "saved"
-tokenizer.save_pretrained(save_directory)
-model.save_pretrained(save_directory)
+# save_directory = "saved"
+# tokenizer.save_pretrained(save_directory)
+# model.save_pretrained(save_directory)
 
 
-tokenizer = AutoTokenizer.from_pretrained(save_directory)
+model_name = "oliverguhr/german-sentiment-bert"
 
-model = AutoModelForSequenceClassification.from_pretrained(save_directory)
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = AutoModelForSequenceClassification.from_pretrained(model_name)
+
+
+X_train_german = ["Es tut mir leid" ,"ich verstehe das nicht","Danke","Nett, Sie kennen zu lernen"]
+
+
+batch = tokenizer(X_train_german,padding=True,truncation=True,max_length=256,return_tensors="pt")
+print(batch)
+
+
+with torch.no_grad():
+    outputs= model(**batch)
+    label_ids = torch.argmax(outputs.logits,dim=1)
+    print(label_ids)
+    labels = [model.config.id2label[label_id] for label_id in label_ids.tolist()]
+    print(labels)
+    
+    
