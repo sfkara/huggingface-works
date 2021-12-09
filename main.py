@@ -31,7 +31,7 @@ batch = tokenizer(X_train,padding=True, truncation=True, max_length=512,return_t
 print(batch)
 
 with torch.no_grad():
-    outputs = model(**batch, labels = torch.tensor([1,0]))
+    outputs = model(**batch,labels=torch.tensor([1,0]))
     print(outputs)
     predictions = F.softmax(outputs.logits,dim=1)
     print(predictions)
@@ -39,3 +39,13 @@ with torch.no_grad():
     print(labels)
     labels = [model.config.id2label[label_id] for label_id in labels.tolist()]
     print(labels)
+    
+    
+save_directory = "saved"
+tokenizer.save_pretrained(save_directory)
+model.save_pretrained(save_directory)
+
+
+tokenizer = AutoTokenizer.from_pretrained(save_directory)
+
+model = AutoModelForSequenceClassification.from_pretrained(save_directory)
